@@ -1,0 +1,463 @@
+# Data at the node and role-level overrides data in data/common.yaml.
+# Plan data is stored in data/plans/shared.yaml and is replicated
+# throughout the hierachy using Hiera alias() and lookup() functions.
+# Be careful editing any metadata outside of shared.yaml
+# See hiera.yaml
+---
+'boltello_builder::foreman_proxy::enable_remote_execution': "%{alias('boltello::enable_remote_execution')}"
+'boltello_builder::r10k::default_environment': "%{alias('boltello::default_puppet_environment')}"
+'boltello_builder::r10k::remote': "%{alias('boltello::r10k_remote')}"
+'foreman_proxy_content::enable_ostree': false
+'foreman_proxy_content::enable_yum': true
+'foreman_proxy_content::enable_file': true
+'foreman_proxy_content::proxy_pulp_isos_to_pulpcore': false
+'foreman_proxy_content::proxy_pulp_yum_to_pulpcore': false
+'foreman_proxy_content::enable_puppet': true
+'foreman_proxy_content::enable_docker': true
+'foreman_proxy_content::enable_deb': true
+'apache::mod::passenger::manage_repo': false
+'foreman::db_manage': false
+'apache::mod::ssl::ssl_cipher': 'ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:!3DES:!DES:!DSS'
+'apache::trace_enable': 'Off'
+'r10k::cachedir': '/opt/puppetlabs/server/data/puppetserver/r10k'
+'r10k::r10k_basedir': '/etc/puppetlabs/code/environments'
+'r10k::remote': "%{lookup('boltello::r10k_remote')}"
+'r10k::mcollective': false
+'r10k::sources': null
+'r10k::deploy_settings': {}
+'r10k::git_settings': {}
+'r10k::forge_settings': {}
+'hiera::puppet_conf_manage': false
+'hiera::hiera_version': '5'
+'hiera::hiera5_defaults':
+  'datadir': 'data'
+  'data_hash': 'yaml_data'
+'hiera::hierarchy':
+  -
+    'name': 'Default yaml'
+    'path': 'common.yaml'
+  -
+    'name': 'Module yaml'
+    'paths': ['common.yaml']
+'certs::log_dir': /var/log/certs
+'certs::node_fqdn': '%{trusted.certname}'
+'certs::regenerate': false
+'certs::regenerate_ca': false
+'certs::deploy': true
+'certs::ca_common_name': '%{trusted.certname}'
+'certs::country': US
+'certs::state': North Carolina
+'certs::city': Raleigh
+'certs::org': Katello
+'certs::org_unit': SomeOrgUnit
+'certs::expiration': '7300'
+'certs::ca_expiration': '36500'
+'certs::server_cert':
+'certs::server_key':
+'certs::server_cert_req':
+'certs::server_ca_cert':
+'certs::user': root
+'certs::group': foreman
+'certs::default_ca_name': katello-default-ca
+'certs::server_ca_name': katello-server-ca
+'certs::tar_file':
+'foreman_proxy::repo': null
+'foreman_proxy::gpgcheck': true
+'foreman_proxy::version': present
+'foreman_proxy::ensure_packages_version': present
+'foreman_proxy::plugin_version': installed
+'foreman_proxy::bind_host':
+  - '*'
+'foreman_proxy::http_port': 8000
+'foreman_proxy::ssl_port': "%{alias('boltello::foreman_proxy_ssl_port')}"
+'foreman_proxy::dir': /usr/share/foreman-proxy
+'foreman_proxy::user': foreman-proxy
+'foreman_proxy::groups': []
+'foreman_proxy::log': /var/log/foreman-proxy/proxy.log
+'foreman_proxy::log_level': INFO
+'foreman_proxy::log_buffer': 2000
+'foreman_proxy::log_buffer_errors': 1000
+'foreman_proxy::http': true
+'foreman_proxy::ssl': true
+'foreman_proxy::ssl_ca': /etc/foreman-proxy/ssl_ca.pem
+'foreman_proxy::ssl_cert': /etc/foreman-proxy/ssl_cert.pem
+'foreman_proxy::ssl_key': /etc/foreman-proxy/ssl_key.pem
+'foreman_proxy::foreman_ssl_ca': /etc/foreman-proxy/foreman_ssl_ca.pem
+'foreman_proxy::foreman_ssl_cert': /etc/foreman-proxy/foreman_ssl_cert.pem
+'foreman_proxy::foreman_ssl_key': /etc/foreman-proxy/foreman_ssl_key.pem
+'foreman_proxy::ssl_disabled_ciphers': []
+'foreman_proxy::tls_disabled_versions': []
+'foreman_proxy::manage_sudoersd': true
+'foreman_proxy::use_sudoersd': true
+'foreman_proxy::use_sudoers': true
+'foreman_proxy::puppet_group': puppet
+'foreman_proxy::ssldir': /etc/puppetlabs/puppet/ssl
+'foreman_proxy::puppetdir': /etc/puppetlabs/puppet
+'foreman_proxy::puppetca_cmd': '/opt/puppetlabs/bin/puppet cert'
+'foreman_proxy::puppetca_provider': puppetca_hostname_whitelisting
+'foreman_proxy::autosignfile': /etc/puppetlabs/puppet/autosign.conf
+'foreman_proxy::puppetca_tokens_file': /var/lib/foreman-proxy/tokens.yml
+'foreman_proxy::puppetca_token_ttl': 360
+'foreman_proxy::puppetca_certificate': null
+'foreman_proxy::manage_puppet_group': false
+'foreman_proxy::puppet': true
+'foreman_proxy::puppet_listen_on': https
+'foreman_proxy::puppetrun_cmd': '/opt/puppetlabs/bin/puppet agent --onetime --no-usecacheonfailure'
+'foreman_proxy::puppetrun_provider': ssh
+'foreman_proxy::customrun_cmd': /bin/false
+'foreman_proxy::customrun_args': '-ay -f -s'
+'foreman_proxy::mcollective_user': root
+'foreman_proxy::puppetssh_keyfile': /var/lib/foreman-proxy/ssh/id_rsa_foreman_proxy
+'foreman_proxy::puppetssh_sudo': true
+'foreman_proxy::puppetssh_command': '/opt/puppetlabs/bin/puppet agent --onetime --no-usecacheonfailure'
+'foreman_proxy::puppetssh_user': root
+'foreman_proxy::puppetssh_wait': true
+'foreman_proxy::salt_puppetrun_cmd': puppet.run
+'foreman_proxy::puppet_user': root
+'foreman_proxy::puppet_url': 'https://%{trusted.certname}:8140'
+'foreman_proxy::puppet_ssl_ca': /etc/puppetlabs/puppet/ssl/certs/ca.pem
+'foreman_proxy::puppet_ssl_cert': '/etc/puppetlabs/puppet/ssl/certs/%{trusted.certname}.pem'
+'foreman_proxy::puppet_ssl_key': '/etc/puppetlabs/puppet/ssl/private_keys/%{trusted.certname}.pem'
+'foreman_proxy::puppetssh_wait': true
+'foreman_proxy::salt_puppetrun_cmd': puppet.run
+'foreman_proxy::puppet_user': root
+'foreman_proxy::puppet_url': 'https://%{trusted.certname}:8140'
+'foreman_proxy::puppet_ssl_ca': /etc/puppetlabs/puppet/ssl/certs/ca.pem
+'foreman_proxy::puppet_ssl_cert': '/etc/puppetlabs/puppet/ssl/certs/%{trusted.certname}.pem'
+'foreman_proxy::puppet_ssl_key': '/etc/puppetlabs/puppet/ssl/private_keys/%{trusted.certname}.pem'
+'foreman_proxy::puppet_use_environment_api': null
+'foreman_proxy::puppet_api_timeout': 30
+'foreman_proxy::templates': true
+'foreman_proxy::templates_listen_on': both
+'foreman_proxy::template_url': 'http://%{trusted.certname}:8000'
+'foreman_proxy::logs': true
+'foreman_proxy::logs_listen_on': https
+'foreman_proxy::httpboot': null
+'foreman_proxy::httpboot_listen_on': both
+'foreman_proxy::tftp': false
+'foreman_proxy::tftp_listen_on': https
+'foreman_proxy::tftp_managed': true
+'foreman_proxy::tftp_manage_wget': true
+'foreman_proxy::tftp_syslinux_filenames':
+  - /usr/share/syslinux/chain.c32
+  - /usr/share/syslinux/mboot.c32
+  - /usr/share/syslinux/menu.c32
+  - /usr/share/syslinux/memdisk
+  - /usr/share/syslinux/pxelinux.0
+'foreman_proxy::tftp_root': /var/lib/tftpboot
+'foreman_proxy::tftp_dirs':
+  - /var/lib/tftpboot/pxelinux.cfg
+  - /var/lib/tftpboot/grub
+  - /var/lib/tftpboot/grub2
+  - /var/lib/tftpboot/boot
+  - /var/lib/tftpboot/ztp.cfg
+  - /var/lib/tftpboot/poap.cfg
+'foreman_proxy::tftp_servername': null
+'foreman_proxy::tftp_replace_grub2_cfg': false
+'foreman_proxy::dhcp': false
+'foreman_proxy::dhcp_listen_on': https
+'foreman_proxy::dhcp_managed': true
+'foreman_proxy::dhcp_provider': isc
+'foreman_proxy::dhcp_subnets': []
+'foreman_proxy::dhcp_option_domain':
+  - '%{facts.networking.domain}'
+'foreman_proxy::dhcp_search_domains': null
+'foreman_proxy::dhcp_interface': eth0
+'foreman_proxy::dhcp_additional_interfaces': []
+'foreman_proxy::dhcp_gateway': null
+'foreman_proxy::dhcp_range': null
+'foreman_proxy::dhcp_pxeserver': null
+'foreman_proxy::dhcp_pxefilename': pxelinux.0
+'foreman_proxy::dhcp_network': null
+'foreman_proxy::dhcp_netmask': null
+'foreman_proxy::dhcp_nameservers': default
+'foreman_proxy::dhcp_server': 127.0.0.1
+'foreman_proxy::dhcp_config': /etc/dhcp/dhcpd.conf
+'foreman_proxy::dhcp_leases': /var/lib/dhcpd/dhcpd.leases
+'foreman_proxy::dhcp_key_name': null
+'foreman_proxy::dhcp_key_secret': null
+'foreman_proxy::dhcp_omapi_port': 7911
+'foreman_proxy::dhcp_peer_address': null
+'foreman_proxy::dhcp_node_type': standalone
+'foreman_proxy::dhcp_failover_address': '%{facts.networking.ip}'
+'foreman_proxy::dhcp_failover_port': 519
+'foreman_proxy::dhcp_max_response_delay': 30
+'foreman_proxy::dhcp_max_unacked_updates': 10
+'foreman_proxy::dhcp_mclt': 300
+'foreman_proxy::dhcp_load_split': 255
+'foreman_proxy::dhcp_load_balance': 3
+'foreman_proxy::dhcp_manage_acls': true
+'foreman_proxy::dns': false
+'foreman_proxy::dns_listen_on': https
+'foreman_proxy::dns_managed': true
+'foreman_proxy::dns_provider': nsupdate
+'foreman_proxy::dns_interface': eth0
+'foreman_proxy::dns_zone': '%{facts.networking.domain}'
+'foreman_proxy::dns_reverse': null
+'foreman_proxy::dns_server': 127.0.0.1
+'foreman_proxy::dns_ttl': 86400
+'foreman_proxy::dns_tsig_keytab': /etc/foreman-proxy/dns.keytab
+'foreman_proxy::dns_tsig_principal': 'foremanproxy/%{trusted.certname}@%{facts.networking.domain}'
+'foreman_proxy::dns_forwarders': []
+'foreman_proxy::libvirt_network': default
+'foreman_proxy::libvirt_connection': 'qemu:///system'
+'foreman_proxy::bmc': false
+'foreman_proxy::bmc_listen_on': https
+'foreman_proxy::bmc_default_provider': ipmitool
+'foreman_proxy::bmc_ssh_user': root
+'foreman_proxy::bmc_ssh_key': /usr/share/foreman/.ssh/id_rsa
+'foreman_proxy::bmc_ssh_powerstatus': 'true'
+'foreman_proxy::bmc_ssh_powercycle': 'shutdown -r +1'
+'foreman_proxy::bmc_ssh_poweroff': 'shutdown +1'
+'foreman_proxy::bmc_ssh_poweron': 'false'
+'foreman_proxy::realm': false
+'foreman_proxy::realm_listen_on': https
+'foreman_proxy::realm_provider': freeipa
+'foreman_proxy::realm_keytab': /etc/foreman-proxy/freeipa.keytab
+'foreman_proxy::realm_principal': 'realm-proxy@%{facts.networking.domain}'
+'foreman_proxy::freeipa_config': /etc/ipa/default.conf
+'foreman_proxy::freeipa_remove_dns': true
+'foreman_proxy::keyfile': /etc/rndc.key
+'foreman_proxy::register_in_foreman': false
+'foreman_proxy::registered_name': '%{trusted.certname}'
+'foreman_proxy::registered_proxy_url': null
+'foreman_proxy::oauth_effective_user': admin
+'foreman_proxy::oauth_consumer_key': "%{alias('boltello::oauth_consumer_key')}"
+'foreman_proxy::oauth_consumer_secret': "%{alias('boltello::oauth_consumer_secret')}"
+'foreman_proxy::puppet_use_cache': null
+'foreman_proxy::plugin::ansible': false
+'foreman_proxy::plugin::dhcp::infoblox': false
+'foreman_proxy::plugin::discovery': false
+'foreman_proxy::plugin::dns::infoblox': false
+'foreman_proxy::plugin::openscap': false
+'foreman_proxy::plugin::pulp::enabled': true
+'foreman_proxy::plugin::pulp::listen_on': https
+'foreman_proxy::plugin::pulp::pulp3_enabled': false
+'foreman_proxy::plugin::pulp::pulp3_mirror': false
+'foreman_proxy::plugin::pulp::version': null
+'foreman_proxy::plugin::pulp::group': null
+'foreman_proxy::plugin::pulp::pulp_url': 'https://%{trusted.certname}/pulp'
+'foreman_proxy::plugin::pulp::pulp_dir': /var/lib/pulp
+'foreman_proxy::plugin::pulp::pulp_content_dir': /var/lib/pulp/content
+'foreman_proxy::plugin::pulp::puppet_content_dir': /etc/puppetlabs/code/environments
+'foreman_proxy::plugin::pulp::mongodb_dir': /var/lib/mongodb
+'foreman_proxy::plugin::remote_execution::ssh::enabled': "%{alias('boltello::enable_remote_execution')}"
+'foreman_proxy::plugin::remote_execution::ssh::listen_on': https
+'foreman_proxy::plugin::remote_execution::ssh::generate_keys': false
+'foreman_proxy::plugin::remote_execution::ssh::install_key': true
+'foreman_proxy::plugin::remote_execution::ssh::ssh_identity_dir': /var/lib/foreman-proxy/ssh
+'foreman_proxy::plugin::remote_execution::ssh::ssh_identity_file': id_rsa_foreman_proxy
+'foreman_proxy::plugin::remote_execution::ssh::ssh_keygen': /usr/bin/ssh-keygen
+'foreman_proxy::plugin::remote_execution::ssh::local_working_dir': /var/tmp
+'foreman_proxy::plugin::remote_execution::ssh::remote_working_dir': /var/tmp
+'foreman_proxy::plugin::remote_execution::ssh::ssh_kerberos_auth': false
+'foreman_proxy_content::foreman_url': "https://%{lookup('boltello::katello_server')}"
+'foreman_proxy_content::pulp_admin_password': "%{alias('boltello::pulp_admin_password')}"
+'foreman_proxy_content::pulp_max_speed': null
+'foreman_proxy_content::pulp_num_workers': null
+'foreman_proxy_content::pulp_proxy_password': null
+'foreman_proxy_content::pulp_proxy_port': null
+'foreman_proxy_content::pulp_proxy_url': null
+'foreman_proxy_content::pulp_proxy_username': null
+'foreman_proxy_content::pulp_puppet_wsgi_processes': 1
+'foreman_proxy_content::pulp_ca_cert': null
+'foreman_proxy_content::pulp_worker_timeout': 60
+'foreman_proxy_content::puppet': true
+'foreman_proxy_content::reverse_proxy_port': 8443
+'foreman_proxy_content::ssl_protocol': null
+'foreman_proxy_content::rhsm_hostname': null
+'foreman_proxy_content::rhsm_url': /rhsm
+'foreman_proxy_content::qpid_router': true
+'foreman_proxy_content::qpid_router_hub_addr': null
+'foreman_proxy_content::qpid_router_hub_port': 5646
+'foreman_proxy_content::qpid_router_agent_addr': null
+'foreman_proxy_content::qpid_router_agent_port': 5647
+'foreman_proxy_content::qpid_router_broker_addr': localhost
+'foreman_proxy_content::qpid_router_broker_port': 5671
+'foreman_proxy_content::qpid_router_logging_level': info+
+'foreman_proxy_content::qpid_router_logging': syslog
+'foreman_proxy_content::qpid_router_logging_path': /var/log/qdrouterd
+'foreman_proxy_content::qpid_router_ssl_ciphers': null
+'foreman_proxy_content::qpid_router_ssl_protocols': null
+'foreman_proxy_content::qpid_router_sasl_mech': PLAIN
+'foreman_proxy_content::qpid_router_sasl_username': "%{alias('boltello::qpid_router_sasl_username')}"
+'foreman_proxy_content::qpid_router_sasl_password': "%{alias('boltello::qpid_router_sasl_password')}"
+'foreman_proxy_content::manage_broker': true
+'foreman::puppetmaster::enc': true
+'foreman::puppetmaster::reports': true
+'foreman::puppetmaster::receive_facts': true
+'foreman::puppetmaster::foreman_url': "https://%{lookup('boltello::katello_server')}"
+'foreman::puppetmaster::ssl_ca': /etc/pki/katello/puppet/puppet_client_ca.crt
+'foreman::puppetmaster::ssl_cert': /etc/pki/katello/puppet/puppet_client.crt
+'foreman::puppetmaster::ssl_key': /etc/pki/katello/puppet/puppet_client.key
+'puppet::version': "%{lookup('boltello::puppet_version')}"
+'puppet::user': puppet
+'puppet::group': puppet
+'puppet::dir': /etc/puppetlabs/puppet
+'puppet::codedir': /etc/puppetlabs/code
+'puppet::vardir': /opt/puppetlabs/puppet/cache
+'puppet::logdir': /var/log/puppetlabs/puppet
+'puppet::rundir': /var/run/puppetlabs
+'puppet::ssldir': /etc/puppetlabs/puppet/ssl
+'puppet::sharedir': /opt/puppetlabs/puppet
+'puppet::manage_packages': false
+'puppet::dir_owner': root
+'puppet::dir_group': null
+'puppet::package_source': null
+'puppet::port': null
+'puppet::autosign': null
+'puppet::package_provider': null
+'puppet::listen': false
+'puppet::listen_to': []
+'puppet::pluginsync': true
+'puppet::splay': false
+'puppet::splaylimit': 1800
+'puppet::autosign_entries': []
+'puppet::autosign_mode': '0664'
+'puppet::autosign_content': null
+'puppet::autosign_source': null
+'puppet::runinterval': 1800
+'puppet::usecacheonfailure': true
+'puppet::runmode': service
+'puppet::run_hour': null
+'puppet::run_minute': null
+'puppet::unavailable_runmodes': []
+'puppet::cron_cmd': null
+'puppet::systemd_cmd': null
+'puppet::systemd_randomizeddelaysec': 0
+'puppet::agent_noop': false
+'puppet::show_diff': true
+'puppet::module_repository': null
+'puppet::http_connect_timeout': null
+'puppet::http_read_timeout': null
+'puppet::ca_port': null
+'puppet::ca_crl_filepath': null
+'puppet::prerun_command': null
+'puppet::postrun_command': null
+'puppet::use_srv_records': false
+'puppet::srv_domain': '%{facts.networking.domain}'
+'puppet::pluginsource': 'puppet:///plugins'
+'puppet::pluginfactsource': 'puppet:///pluginfacts'
+'puppet::additional_settings': {}
+'puppet::agent_additional_settings': {}
+'puppet::agent_restart_command': '/usr/bin/systemctl reload-or-restart puppet'
+'puppet::classfile': '$statedir/classes.txt'
+'puppet::hiera_config': '$confdir/hiera.yaml'
+'puppet::auth_template': puppet/auth.conf.erb
+'puppet::auth_allowed':
+  - '$1'
+'puppet::client_package':
+  - puppet-agent
+'puppet::agent': true
+'puppet::remove_lock': true
+'puppet::report': true
+'puppet::client_certname': '%{trusted.certname}'
+'puppet::systemd_unit_name': puppet-run
+'puppet::service_name': puppet
+'puppet::syslogfacility': null
+'puppet::environment': "%{alias('boltello::default_puppet_environment')}"
+'puppet::server': false
+'puppet::server_manage_user': true
+'puppet::server_user': puppet
+'puppet::server_group': puppet
+'puppet::server_dir': /etc/puppetlabs/puppet
+'puppet::server_ip': 0.0.0.0
+'puppet::server_custom_trusted_oid_mapping': null
+'puppet::server_http_port': 8139
+'puppet::server_reports': foreman
+'puppet::server_puppetserver_dir': /etc/puppetlabs/puppetserver
+'puppet::server_puppetserver_vardir': /opt/puppetlabs/server/data/puppetserver
+'puppet::server_puppetserver_rundir': /var/run/puppetlabs/puppetserver
+'puppet::server_puppetserver_logdir': /var/log/puppetlabs/puppetserver
+'puppet::server_external_nodes': /etc/puppetlabs/puppet/node.rb
+'puppet::server_cipher_suites':
+  - TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
+  - TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
+  - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+  - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+  - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+  - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+'puppet::server_config_version': null
+'puppet::server_connect_timeout': 120000
+'puppet::server_git_repo': false
+'puppet::server_puppetserver_version': "%{lookup('boltello::puppetserver_version')}"
+'puppet::server_default_manifest': false
+'puppet::server_default_manifest_path': /etc/puppet/manifests/default_manifest.pp
+'puppet::server_default_manifest_content': ""
+'puppet::server_environments_owner': apache
+'puppet::server_environments_group': null
+'puppet::server_environments_mode': '0755'
+'puppet::server_envs_dir': /etc/puppetlabs/code/environments
+'puppet::server_envs_target': null
+'puppet::server_common_modules_path':
+  - /opt/puppetlabs/puppet/modules
+  - /usr/share/puppet/modules
+'puppet::server_git_repo_mode': '0755'
+'puppet::server_git_repo_path': /opt/puppetlabs/puppet/cache/puppet.git
+'puppet::server_git_repo_group': puppet
+'puppet::server_git_repo_user': puppet
+'puppet::server_git_branch_map': {}
+'puppet::server_idle_timeout': 1200000
+'puppet::server_post_hook_content': puppet/server/post-receive.erb
+'puppet::server_post_hook_name': post-receive
+'puppet::server_storeconfigs_backend': null
+'puppet::server_ruby_load_paths':
+  - /opt/puppetlabs/puppet/lib/ruby/vendor_ruby
+'puppet::server_ssl_dir': /etc/puppetlabs/puppet/ssl
+'puppet::server_ssl_dir_manage': true
+'puppet::server_ssl_key_manage': true
+'puppet::server_ssl_protocols':
+  - TLSv1.2
+'puppet::server_ssl_chain_filepath': /etc/puppetlabs/puppet/ssl/ca/ca_crt.pem
+'puppet::server_package': null
+'puppet::server_version': "%{lookup('boltello::puppetserver_version')}"
+'puppet::server_certname': '%{trusted.certname}'
+'puppet::server_enc_api': v2
+'puppet::server_report_api': v2
+'puppet::server_request_timeout': 60
+'puppet::server_strict_variables': false
+'puppet::server_additional_settings': {}
+'puppet::server_foreman_ssl_ca': /etc/pki/katello/puppet/puppet_client_ca.crt
+'puppet::server_foreman_ssl_cert': /etc/pki/katello/puppet/puppet_client.crt
+'puppet::server_foreman_ssl_key': /etc/pki/katello/puppet/puppet_client.key
+'puppet::server_foreman_facts': true
+'puppet::server_foreman_url': "https://%{lookup('boltello::katello_server')}"
+'puppet::server_puppet_basedir': /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/puppet
+'puppet::server_puppetdb_host': null
+'puppet::server_puppetdb_port': 8081
+'puppet::server_puppetdb_swf': false
+'puppet::server_parser': current
+'puppet::server_environment_timeout': null
+'puppet::server_jvm_java_bin': /usr/bin/java
+'puppet::server_jvm_config': /etc/sysconfig/puppetserver
+'puppet::server_jvm_min_heap_size': 2G
+'puppet::server_jvm_max_heap_size': 2G
+'puppet::server_jvm_extra_args': null
+'puppet::server_jvm_cli_args': null
+'puppet::server_jruby_gem_home': /opt/puppetlabs/server/data/puppetserver/jruby-gems
+'puppet::server_max_active_instances': 2
+'puppet::server_max_requests_per_instance': 0
+'puppet::server_max_queued_requests': 0
+'puppet::server_max_retry_delay': 1800
+'puppet::server_use_legacy_auth_conf': false
+'puppet::server_check_for_updates': true
+'puppet::server_environment_class_cache_enabled': false
+'puppet::server_web_idle_timeout': 30000
+'puppet::server_puppetserver_jruby9k': false
+'puppet::server_puppetserver_metrics': null
+'puppet::server_metrics_jmx_enable': true
+'puppet::server_metrics_graphite_enable': false
+'puppet::server_metrics_graphite_host': 127.0.0.1
+'puppet::server_metrics_graphite_port': 2003
+'puppet::server_metrics_server_id': '%{trusted.certname}'
+'puppet::server_metrics_graphite_interval': 5
+'puppet::server_metrics_allowed': null
+'puppet::server_puppetserver_experimental': true
+'puppet::server_puppetserver_trusted_agents': []
+'puppet::server_compile_mode': null
+'puppet::server_acceptor_threads': null
+'puppet::server_selector_threads': null
+'puppet::server_ssl_acceptor_threads': null
+'puppet::server_ssl_selector_threads': null
+'puppet::server_max_threads': null
+'puppet::server_max_open_files': null

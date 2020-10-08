@@ -1,0 +1,27 @@
+# Docs Reference: https://puppet.com/docs/bolt/latest/inventory_file.html
+#
+---
+version: 2
+groups:
+  - name: katello
+    targets:
+      - 'ip-172-31-76-238.ec2.internal'
+    facts:
+      boltello_role: katello
+  - name: proxies
+    targets:
+      - 'ip-172-31-66-197.ec2.internal'
+    facts:
+      boltello_role: proxy
+config:
+  transport: ssh
+  ssh:
+    host-key-check: false
+    private-key: ~/.ssh/bolt_id_rsa
+    tty: true
+    user: centos
+    run-as: root
+    run-as-command:
+      - '/bin/sudo'
+      - '-E'
+      - '-u'

@@ -1,0 +1,21 @@
+{
+  "description": "Generate certs for the smart proxy",
+  "parameters": {
+    "boltdir": {
+      "description": "The bolt project directory",
+      "type": "Optional[String]"
+    },
+    "proxy": {
+      "description": "The certname of the proxy",
+      "type": "String"
+    },
+    "katello_cnames": {
+      "description": "The subject alt names for the proxy certificates",
+      "type": "String"
+    },
+    "puppet_cnames": {
+      "description": "The subject alt names for puppet certificates",
+      "type": "String"
+    }
+  }
+}

@@ -1,0 +1,65 @@
+# Common versions, etc. which are aliased to both plans and modules
+# WARNING: Any keys containing interpolation tokens in their 
+# values are explicitly **knocked out** by Bolt.
+# Be careful editing any metadata outside of this file
+# See hiera.yaml
+---
+'boltello::katello_server': 'ip-172-31-76-238.ec2.internal'
+'boltello::katello_proxies':
+  - '%{trusted.certname}'
+  - 'ip-172-31-66-197.ec2.internal'
+'boltello::puppetserver_version': '6.13.0'
+'boltello::puppet_version': '6.18.0'
+'boltello::foreman_version': '2.1'
+'boltello::katello_version': '3.16'
+'boltello::nginx_version': '1.18.0'
+'boltello::postgresql_prefix': 'rh-postgresql12-'
+'boltello::postgresql_version': '12.1'
+'boltello::enable_remote_execution': true
+'boltello::foreman_proxy_ssl_port': 9090
+'boltello::db_manage': true
+'boltello::postgresql_datadir': '/var/opt/rh/rh-postgresql12/lib/pgsql/data'
+'boltello::update_environment_from_facts': true
+'boltello::enable_remote_agent_install': true
+'boltello::enable_remote_execution': true
+'boltello::restrict_registered_smart_proxies': true
+'boltello::require_ssl_smart_proxies': true
+'boltello::default_puppet_environment': 'production'
+'boltello::default_hostgroup': true
+'boltello::default_hostgroup_hostgroups': []
+'boltello::postgresql_datadir': '/var/opt/rh/rh-postgresql12/lib/pgsql/data'
+'boltello::r10k_remote': 'https://github.com/superfantasticawesome/boltello-control.git'
+'boltello::initial_admin_username': admin
+'boltello::initial_admin_password': 5X4ymJfc5cJ2nUeP
+'boltello::initial_organization': 'Default Organization'
+'boltello::initial_location': 'Default Location'
+'boltello::db_username': foreman
+'boltello::db_password': BTeN8QaBAJ5pdrB2pE7W
+'boltello::oauth_consumer_key': 42QxaSVbLTnXQWfnJ9s6BPBc
+'boltello::oauth_consumer_secret': 9JKBbWMuJbSgn22gUhNwpfap
+'boltello::pulp_admin_password': SGPNpCZvjDYsc5dhBjyf5t7C
+'boltello::pulpcore_postgresql_password': 8agfjcbaD9oauhfoi4Lspq8Y
+'boltello::qpid_router_sasl_username': katello_agent
+'boltello::qpid_router_sasl_password': fmY7jDKadKqkBXhew
+'boltello::candlepin_oauth_key': katello
+'boltello::candlepin_oauth_secret': WeZn9euUXgzU3qmbT5Xd8TFAfPJThXQE
+'boltello::post_sync_token': jV5sAuwXXnLq2wnZ78t8Rwnbmny3EQdR
+'boltello::candlepin_db_user': candlepin
+'boltello::candlepin_db_password': TvxLUDF7y8cHY4R9CQk3W7JSdpZDBW82
+'boltello::subject_alt_names':
+  - 'puppet'
+  - 'puppet.%{facts.networking.domain}'
+'boltello::katello_subject_alt_names':
+  - 'katello'
+  - 'katello.%{facts.networking.domain}'
+'boltello::versionlock_packages':
+  'puppetserver': "%{alias('boltello::puppetserver_version')}"
+  'puppet-agent': "%{alias('boltello::puppet_version')}"
+  'foreman-release': "%{alias('boltello::foreman_version')}"
+  'katello': "%{alias('boltello::katello_version')}"
+  'katello-repos': "%{alias('boltello::katello_version')}"
+  'foreman-service': "%{alias('boltello::foreman_version')}"
+  'foreman-proxy': "%{alias('boltello::foreman_version')}"
+  'foreman-dynflow-sidekiq': "%{alias('boltello::foreman_version')}"
+  'foreman-postgresql': "%{alias('boltello::foreman_version')}"
+  'nginx': "%{alias('boltello::nginx_version')}"

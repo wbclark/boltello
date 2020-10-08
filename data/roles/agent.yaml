@@ -1,0 +1,6 @@
+# EXAMPLE DATA
+---
+'puppet::agent': true
+'puppet::agent_noop': false
+'puppet::server': false
+'puppet::server_foreman': false

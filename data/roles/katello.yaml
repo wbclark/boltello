@@ -1,0 +1,334 @@
+---
+'boltello_builder::message': 'katello server'
+'boltello_builder::foreman::ignored_environments':
+  - 'common'
+'boltello_builder::classes':
+  - 'boltello_builder::certs'
+  - 'boltello_builder::foreman'
+  - 'boltello_builder::katello'
+  - 'boltello_builder::pulp'
+  - 'boltello_builder::foreman_proxy'
+  - 'boltello_builder::puppet'
+  - 'boltello_builder::hiera'
+  - 'boltello_builder::r10k'
+'boltello_builder::foreman::enable_remote_execution': "%{alias('boltello::enable_remote_execution')}"
+'boltello_builder::foreman::trusted_hosts': "%{alias('boltello::katello_proxies')}"
+'boltello_builder::foreman::foreman_config_entries':
+  -
+    'require_ssl_smart_proxies':
+      'name': 'require_ssl_smart_proxies'
+      'value': "%{alias('boltello::require_ssl_smart_proxies')}"
+  - 
+    'restrict_registered_smart_proxies':
+      'name': 'restrict_registered_smart_proxies'
+      'value': "%{alias('boltello::restrict_registered_smart_proxies')}"
+  -
+    'update_environment_from_facts':
+      'name': 'update_environment_from_facts'
+      'value': "%{alias('boltello::update_environment_from_facts')}"
+  -
+    'default_puppet_environment':
+      'name': 'default_puppet_environment'
+      'value': "%{alias('boltello::default_puppet_environment')}"
+
+'certs::cname': "%{alias('boltello::katello_subject_alt_names')}"
+'certs::foreman_proxy_content::foreman_proxy_cname': "%{alias('boltello::katello_subject_alt_names')}"
+'certs::generate': true
+'foreman::foreman_url': 'https://%{trusted.certname}'
+'foreman::unattended': true
+'foreman::unattended_url':
+'foreman::apache': true
+'foreman::passenger': false
+'foreman::passenger_ruby': "/usr/bin/tfm-ruby"
+'foreman::passenger_ruby_package': tfm-rubygem-passenger-native
+'foreman::plugin_prefix': tfm-rubygem-foreman_
+'foreman::servername': '%{trusted.certname}'
+'foreman::serveraliases':
+  - foreman
+'foreman::ssl': true
+'foreman::version': present
+'foreman::plugin_version': present
+'foreman::db_manage': "%{alias('boltello::db_manage')}"
+'foreman::db_host':
+'foreman::db_port':
+'foreman::db_database':
+'foreman::db_username': "%{alias('boltello::db_username')}"
+'foreman::db_password': "%{alias('boltello::db_password')}"
+'foreman::db_sslmode':
+'foreman::db_root_cert':
+'foreman::db_pool': 5
+'foreman::db_manage_rake': true
+'foreman::app_root': "/usr/share/foreman"
+'foreman::manage_user': true
+'foreman::user': foreman
+'foreman::group': foreman
+'foreman::user_groups': []
+'foreman::rails_env': production
+'foreman::vhost_priority': '05'
+'foreman::server_port': 80
+'foreman::server_ssl_port': 443
+'foreman::server_ssl_ca': "/etc/pki/katello/certs/katello-default-ca.crt"
+'foreman::server_ssl_chain': "/etc/pki/katello/certs/katello-server-ca.crt"
+'foreman::server_ssl_cert': "/etc/pki/katello/certs/katello-apache.crt"
+'foreman::server_ssl_certs_dir':
+'foreman::server_ssl_key': "/etc/pki/katello/private/katello-apache.key"
+'foreman::server_ssl_crl': ''
+'foreman::server_ssl_protocol': null
+'foreman::server_ssl_verify_client': optional
+'foreman::client_ssl_ca': "/etc/foreman/proxy_ca.pem"
+'foreman::client_ssl_cert': "/etc/foreman/client_cert.pem"
+'foreman::client_ssl_key': "/etc/foreman/client_key.pem"
+'foreman::oauth_active': true
+'foreman::oauth_map_users': false
+'foreman::oauth_consumer_key': "%{alias('boltello::oauth_consumer_key')}"
+'foreman::oauth_consumer_secret': "%{alias('boltello::oauth_consumer_secret')}"
+'foreman::passenger_prestart': true
+'foreman::passenger_min_instances': 1
+'foreman::passenger_start_timeout': 90
+'foreman::initial_admin_username': "%{alias('boltello::initial_admin_username')}"
+'foreman::initial_admin_password': "%{alias('boltello::initial_admin_password')}"
+'foreman::initial_admin_email': null
+'foreman::initial_admin_locale': null
+'foreman::initial_admin_timezone': null
+'foreman::initial_organization': "%{alias('boltello::initial_organization')}"
+'foreman::initial_location': "%{alias('boltello::initial_location')}"
+'foreman::ipa_authentication': false
+'foreman::http_keytab': "/etc/httpd/conf/http.keytab"
+'foreman::pam_service': foreman
+'foreman::ipa_manage_sssd': true
+'foreman::websockets_encrypt': true
+'foreman::websockets_ssl_key': "/etc/pki/katello/private/katello-apache.key"
+'foreman::websockets_ssl_cert': "/etc/pki/katello/certs/katello-apache.crt"
+'foreman::logging_level': info
+'foreman::logging_type': file
+'foreman::logging_layout': pattern
+'foreman::loggers': {}
+'foreman::email_delivery_method': null
+'foreman::email_smtp_address': null
+'foreman::email_smtp_port': 25
+'foreman::email_smtp_domain':
+'foreman::email_smtp_authentication': none
+'foreman::email_smtp_user_name': null
+'foreman::email_smtp_password': null
+'foreman::telemetry_prefix': fm_rails
+'foreman::telemetry_prometheus_enabled': false
+'foreman::telemetry_statsd_enabled': false
+'foreman::telemetry_statsd_host': 127.0.0.1:8125
+'foreman::telemetry_statsd_protocol': statsd
+'foreman::telemetry_logger_enabled': false
+'foreman::telemetry_logger_level': DEBUG
+'foreman::dynflow_pool_size': 5
+'foreman::jobs_manage_service': true
+'foreman::jobs_service_ensure': running
+'foreman::jobs_service_enable': true
+'foreman::jobs_sidekiq_redis_url':
+'foreman::hsts_enabled': true
+'foreman::cors_domains': []
+'foreman::foreman_service_puma_threads_min': 0
+'foreman::foreman_service_puma_threads_max': 16
+'foreman::foreman_service_puma_workers': 2
+'foreman::rails_cache_store':
+    type: file
+'foreman::keycloak': false
+'foreman::keycloak_app_name': foreman-openidc
+'foreman::keycloak_realm': ssl-realm
+'foreman::cli::foreman_url':
+'foreman::cli::version': installed
+'foreman::cli::manage_root_config': true
+'foreman::cli::username':
+'foreman::cli::password':
+'foreman::cli::refresh_cache': false
+'foreman::cli::request_timeout': 120
+'foreman::cli::ssl_ca_file':
+'foreman::cli::hammer_plugin_prefix': tfm-rubygem-hammer_cli_
+'foreman::cli::ansible': false
+'foreman::cli::azure': false
+'foreman::cli::discovery': false
+'foreman::cli::kubevirt': false
+'foreman::cli::openscap': false
+'foreman::cli::remote_execution': true
+'foreman::cli::tasks': true
+'foreman::cli::templates': false
+'foreman::cli::virt_who_configure': false
+'foreman::compute::ec2': true
+'foreman::compute::gce': true
+'foreman::compute::libvirt': false
+'foreman::compute::openstack': false
+'foreman::compute::ovirt': false
+'foreman::compute::rackspace': false
+'foreman::compute::vmware': true
+'foreman::plugin::ansible': false
+'foreman::plugin::azure': false
+'foreman::plugin::bootdisk': false
+'foreman::plugin::chef': false
+'foreman::plugin::column_view': false
+'foreman::plugin::default_hostgroup': "%{alias('boltello::default_hostgroup')}"
+'foreman::plugin::default_hostgroup::hostgroups': "%{alias('boltello::default_hostgroup_hostgroups')}"
+'foreman::plugin::digitalocean': false
+'foreman::plugin::discovery': false
+'foreman::plugin::expire_hosts': false
+'foreman::plugin::hooks': false
+'foreman::plugin::kubevirt': false
+'foreman::plugin::leapp': false
+'foreman::plugin::memcache': false
+'foreman::plugin::monitoring': false
+'foreman::plugin::openscap': false
+'foreman::plugin::puppetdb': false
+'foreman::plugin::remote_execution': "%{alias('boltello::enable_remote_execution')}"
+'foreman_proxy::http': false
+'foreman_proxy::ssl': true
+'foreman_proxy::trusted_hosts': "%{alias('boltello::katello_proxies')}"
+'foreman_proxy::puppetca': true
+'foreman_proxy::puppetca_split_configs': true
+'foreman_proxy::puppetca_listen_on': https
+'foreman_proxy::puppetca_sign_all': true
+'foreman_proxy::puppetca_tokens_file': "/var/lib/foreman-proxy/tokens.yml"
+'foreman_proxy::tftp': true
+'foreman_proxy::register_in_foreman': true
+'foreman_proxy::foreman_base_url': 'https://%{trusted.certname}'
+'foreman_proxy::plugin::remote_execution::ssh::generate_keys': true
+'foreman_proxy::plugin::pulp': true
+'foreman_proxy_content::parent_fqdn': '%{trusted.certname}'
+'foreman_proxy_content::pulp_admin_password': "%{alias('boltello::pulp_admin_password')}"
+'foreman_proxy_content::pulp_max_speed':
+'foreman_proxy_content::pulp_num_workers':
+'foreman_proxy_content::pulp_proxy_password':
+'foreman_proxy_content::pulp_proxy_port':
+'foreman_proxy_content::pulp_proxy_url':
+'foreman_proxy_content::pulp_proxy_username':
+'foreman_proxy_content::pulp_puppet_wsgi_processes': 1
+'foreman_proxy_content::pulp_ca_cert':
+'foreman_proxy_content::pulp_worker_timeout': 60
+'foreman_proxy_content::puppet': true
+'foreman_proxy_content::reverse_proxy': false
+'foreman_proxy_content::reverse_proxy_port': 8443
+'foreman_proxy_content::ssl_protocol':
+'foreman_proxy_content::rhsm_hostname':
+'foreman_proxy_content::rhsm_url': "/rhsm"
+'foreman_proxy_content::qpid_router': true
+'foreman_proxy_content::qpid_router_hub_addr':
+'foreman_proxy_content::qpid_router_hub_port': 5646
+'foreman_proxy_content::qpid_router_agent_addr':
+'foreman_proxy_content::qpid_router_agent_port': 5647
+'foreman_proxy_content::qpid_router_broker_addr': localhost
+'foreman_proxy_content::qpid_router_broker_port': 5671
+'foreman_proxy_content::qpid_router_logging_level': info+
+'foreman_proxy_content::qpid_router_logging': syslog
+'foreman_proxy_content::qpid_router_logging_path': "/var/log/qdrouterd"
+'foreman_proxy_content::qpid_router_ssl_ciphers':
+'foreman_proxy_content::qpid_router_ssl_protocols':
+'foreman_proxy_content::qpid_router_sasl_mech': PLAIN
+'foreman_proxy_content::qpid_router_sasl_username': "%{alias('boltello::qpid_router_sasl_username')}"
+'foreman_proxy_content::qpid_router_sasl_password': "%{alias('boltello::qpid_router_sasl_password')}"
+'foreman_proxy_content::manage_broker': true
+'foreman_proxy_content::pulpcore_manage_postgresql': true
+'foreman_proxy_content::pulpcore_postgresql_host': localhost
+'foreman_proxy_content::pulpcore_postgresql_port': 5432
+'foreman_proxy_content::pulpcore_postgresql_user': pulp
+'foreman_proxy_content::pulpcore_postgresql_password': "%{alias('boltello::pulpcore_postgresql_password')}"
+'foreman_proxy_content::pulpcore_postgresql_db_name': pulpcore
+'foreman_proxy_content::pulpcore_postgresql_ssl': false
+'foreman_proxy_content::pulpcore_postgresql_ssl_require': true
+'foreman_proxy_content::pulpcore_postgresql_ssl_cert': "/etc/pki/katello/certs/pulpcore-database.crt"
+'foreman_proxy_content::pulpcore_postgresql_ssl_key': "/etc/pki/katello/private/pulpcore-database.key"
+'foreman_proxy_content::pulpcore_postgresql_ssl_root_ca': "/etc/pki/tls/certs/ca-bundle.crt"
+'foreman_proxy_content::enabled': true
+'foreman_proxy_content::listen_on': https
+'foreman_proxy_content::pulpnode_enabled': false
+'foreman_proxy_content::pulpcore_enabled': true
+'foreman_proxy_content::pulpcore_api_url': 'https://%{trusted.certname}'
+'foreman_proxy_content::pulpcore_content_url': 'https://%{trusted.certname}/pulp/content'
+'foreman_proxy_content::pulpcore_mirror': false
+'foreman_proxy_content::version':
+'foreman_proxy_content::pulp_url': 'https://%{trusted.certname}/pulp'
+'foreman_proxy_content::pulp_dir': "/var/lib/pulp"
+'foreman_proxy_content::pulp_content_dir': "/var/lib/pulp/content"
+'foreman_proxy_content::puppet_content_dir':
+'foreman_proxy_content::mongodb_dir': "/var/lib/mongodb"
+'foreman_proxy_content::enabled': true
+'foreman_proxy_content::listen_on': https
+'foreman_proxy_content::generate_keys': true
+'foreman_proxy_content::install_key': true
+'foreman_proxy_content::ssh_identity_dir': "/var/lib/foreman-proxy/ssh"
+'foreman_proxy_content::ssh_identity_file': id_rsa_foreman_proxy
+'foreman_proxy_content::ssh_keygen': "/usr/bin/ssh-keygen"
+'foreman_proxy_content::local_working_dir': "/var/tmp"
+'foreman_proxy_content::remote_working_dir': "/var/tmp"
+'foreman_proxy_content::ssh_kerberos_auth': false
+'foreman_proxy_content::async_ssh': false
+'katello::candlepin_oauth_key': "%{alias('boltello::candlepin_oauth_key')}"
+'katello::candlepin_oauth_secret': "%{alias('boltello::candlepin_oauth_secret')}"
+'katello::rest_client_timeout': 3600
+'katello::qpid_wcache_page_size': 4
+'katello::qpid_interface': lo
+'katello::qpid_hostname': localhost
+'katello::num_pulp_workers':
+'katello::pulp_worker_timeout': 60
+'katello::pulp_max_speed':
+'katello::enable_ostree': "%{alias('foreman_proxy_content::enable_ostree')}"
+'katello::enable_yum': "%{alias('foreman_proxy_content::enable_yum')}"
+'katello::enable_file': "%{alias('foreman_proxy_content::enable_file')}"
+'katello::enable_puppet': "%{alias('foreman_proxy_content::enable_puppet')}"
+'katello::enable_docker': "%{alias('foreman_proxy_content::enable_docker')}"
+'katello::enable_deb': "%{alias('foreman_proxy_content::enable_deb')}"
+'katello::use_pulp_2_for_file': false
+'katello::use_pulp_2_for_docker': false
+'katello::use_pulp_2_for_yum': false
+'katello::repo_export_dir': "/var/lib/pulp/katello-export"
+'katello::candlepin_db_host': localhost
+'katello::candlepin_db_port':
+'katello::candlepin_db_name': candlepin
+'katello::candlepin_db_user': "%{alias('boltello::candlepin_db_user')}"
+'katello::candlepin_db_password': "%{alias('boltello::candlepin_db_password')}"
+'katello::candlepin_db_ssl': false
+'katello::candlepin_db_ssl_verify': true
+'katello::candlepin_manage_db': true
+'katello::pulp_db_name': pulp_database
+'katello::pulp_db_seeds': localhost:27017
+'katello::pulp_db_username':
+'katello::pulp_db_password':
+'katello::pulp_db_replica_set':
+'katello::pulp_db_ssl': false
+'katello::pulp_db_ssl_keyfile':
+'katello::pulp_db_ssl_certfile':
+'katello::pulp_db_verify_ssl': true
+'katello::pulp_db_ca_path': "/etc/pki/tls/certs/ca-bundle.crt"
+'katello::pulp_db_unsafe_autoretry': false
+'katello::pulp_db_write_concern':
+'katello::pulp_manage_db': true
+'puppet::autosign': true
+'puppet::port': 8140
+'puppet::dns_alt_names':  "%{alias('boltello::katello_subject_alt_names')}"
+'puppet::allow_any_crl_auth': false
+'puppet::server': true
+'puppet::server_admin_api_whitelist': "%{alias('boltello::katello_proxies')}"
+'puppet::server_port': 8140
+'puppet::server_ca': true
+'puppet::server_ca_crl_sync': true
+'puppet::server_crl_enable': true
+'puppet::server_ca_auth_required': true
+'puppet::server_ca_client_self_delete': true
+'puppet::server_ca_client_whitelist': "%{alias('boltello::katello_proxies')}"
+'puppet::server_http': false
+'puppet::server_ca_allow_sans': true
+'puppet::server_ca_allow_auth_extensions': true
+'puppet::server_ca_enable_infra_crl': true
+'mongodb::globals::server_package_name': 'rh-mongodb34-syspaths'
+'mongodb::client::package_name': 'rh-mongodb34-mongodb'
+'mongodb::globals::service_name': 'rh-mongodb34-mongod'
+'mongodb::server::config': '/etc/opt/rh/rh-mongodb34/mongod.conf'
+'mongodb::server::dbpath': '/var/lib/mongodb'
+'mongodb::server::syslog': true
+'mongodb::server::logpath': false
+'mongodb::server::config_template': 'mongodb/mongodb.conf.2.6.erb'
+'mongodb::server::manage_pidfile': false
+'mongodb::server::pidfilepath': '/var/opt/rh/rh-mongodb34/run/mongodb/mongod.pid'
+'redis::globals::scl': rh-redis5
+'postgresql::globals::version': '12'
+'postgresql::globals::client_package_name': rh-postgresql12-postgresql-syspaths
+'postgresql::globals::server_package_name': rh-postgresql12-postgresql-server-syspaths
+'postgresql::globals::contrib_package_name': rh-postgresql12-postgresql-contrib-syspaths
+'postgresql::globals::service_name': postgresql
+'postgresql::globals::datadir': "%{alias('boltello::postgresql_datadir')}"
+'postgresql::globals::confdir': /var/opt/rh/rh-postgresql12/lib/pgsql/data
+'postgresql::globals::bindir': /usr/bin

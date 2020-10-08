@@ -1,0 +1,20 @@
+# Docs Reference: https://puppet.com/docs/puppet/latest/hiera_config_yaml_5.html
+#
+---
+version: 5
+defaults:
+  datadir: data
+  data_hash: yaml_data
+hierarchy:
+  - name: "Per-node data" 
+    path: "nodes/%{trusted.certname}.yaml"
+  - name: "Role-based data"
+    path: "roles/%{facts.boltello_role}.yaml"
+  - name: "Common data"
+    path: "common.yaml"
+  - name: "Aliased data"
+    path: "plans/shared.yaml"
+
+plan_hierarchy:
+  - name: "Boltello plan data"
+    path: "plans/shared.yaml"

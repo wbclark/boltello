@@ -1,0 +1,20 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## Release 1.0.0
+
+**Features**
+- Migrated from bolt.yaml to bolt-project.yaml
+- Renamed the boltello Puppet module to "boltello_builder" to avoid namespace collisions after the move to project-based Bolt
+- Refactor boltello::add_nodes
+- Refactor boltello::versionlock
+- Ensure Foreman REX works across all katello nodes and new agent nodes
+- Upgrade to Katello 3.17 rc1/Foreman 2.2
+- Add postgresql 12.x support
+- Refactor boltello::katello_upgrade and boltello::katello_prep
+- Ensure smart-proxy TCPv4 connectivity by switching 'bind_host' property to '*'
+- Update docs
+**Bugfixes**
+- Fix nginx reverse proxy $ssl_client_x_dn header variable: https://serverfault.com/questions/829754/why-did-the-format-of-nginx-ssl-client-i-dn-suddenly-change
+**Known Issues**

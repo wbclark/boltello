@@ -1,0 +1,10 @@
+{
+  "description": "Generates a Puppetfile from a directory of modules",
+  "parameters": {
+    "modulepath": {
+      "type": "String",
+      "default": "/usr/share/foreman-installer/modules",
+      "description": "The path to the Puppet modules to be parsed"
+    }
+  }  
+}

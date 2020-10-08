@@ -1,0 +1,9 @@
+{
+  "description": "Set the boltello_role fact",
+  "parameters": {
+    "boltello_role": {
+      "type": "String",
+      "description": "The server's role"
+    }
+  }
+}

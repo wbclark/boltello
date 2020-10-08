@@ -1,0 +1,99 @@
+---
+'boltello_builder::message': 'proxy server'
+'boltello_builder::classes':
+  - 'boltello_builder::certs'
+  - 'boltello_builder::foreman_proxy'
+  - 'boltello_builder::pulp'
+  - 'boltello_builder::puppet'
+  - 'boltello_builder::reverse_proxy'
+  - 'boltello_builder::hiera'
+  - 'boltello_builder::r10k'
+'boltello_builder::reverse_proxy::enable_remote_agent_install': "%{alias('boltello::enable_remote_agent_install')}"
+'certs::generate': false
+'certs::tar_file': '/root/%{trusted.certname}-certs.tar'
+'certs::cname': "%{alias('boltello::subject_alt_names')}"
+'certs::foreman_proxy_content::foreman_proxy_cname': "%{alias('boltello::subject_alt_names')}"
+'foreman_proxy::http': true
+'foreman_proxy::manage_puppet_group': true
+'foreman_proxy::trusted_hosts':
+  - "%{alias('boltello::katello_server')}"
+  - '%{trusted.certname}'
+'foreman_proxy::puppetca': false
+'foreman_proxy::foreman_base_url': "https://%{lookup('boltello::katello_server')}"
+'foreman_proxy::plugin::pulp:enabled': false
+'foreman_proxy::plugin::pulp::pulpnode_enabled': true
+'foreman_proxy_content::parent_fqdn': "%{alias('boltello::katello_server')}"
+'foreman_proxy_content::pulp_master': false
+'foreman_proxy_content::reverse_proxy': true
+'puppet::server': true
+'puppet::ca_server': "%{alias('boltello::katello_server')}"
+'puppet::allow_any_crl_auth': false
+'puppet::puppetmaster': '%{trusted.certname}'
+'puppet::server_admin_api_whitelist':
+  - localhost
+  - '%{trusted.certname}'
+'puppet::server_port': 18140
+'puppet::server_ca': false
+'puppet::server_http': true
+'puppet::server_foreman': false
+'puppet::server_allow_header_cert_info': true
+'puppet::server_crl_enable': true
+'puppet::dns_alt_names': "%{alias('boltello::subject_alt_names')}"
+'nginx::daemon_user': 'nginx'
+'nginx::server_purge': true
+'nginx::confd_purge': true
+'nginx::nginx_upstreams':
+  'puppetserver-reverse-proxy':
+    ensure: present
+    members:
+      "https://%{lookup('boltello::katello_server')}:8140":
+        server: "%{alias('boltello::katello_server')}"
+        port: 8140
+'nginx::nginx_servers':
+  'puppetserver-reverse-proxy':
+    ensure: present
+    use_default_location: false
+    server_name:
+      - puppetserver-reverse-proxy
+    listen_port: 8140
+    ssl: true
+    ssl_cert: '/etc/puppetlabs/puppet/ssl/certs/%{trusted.certname}.pem'
+    ssl_key: '/etc/puppetlabs/puppet/ssl/private_keys/%{trusted.certname}.pem'
+    ssl_client_cert: '/etc/puppetlabs/puppet/ssl/certs/ca.pem'
+    ssl_crl: '/etc/puppetlabs/puppet/ssl/crl.pem'
+    ssl_port: 8140  
+    ssl_verify_client: 'optional'
+    ssl_verify_depth: 3
+    ssl_ciphers: 'HIGH:!aNULL:!MD5'
+    access_log: '/var/log/nginx/puppet_access.log'
+    error_log: '/var/log/nginx/puppet_error.log'
+    locations:
+      'puppet-ca':
+        ensure: present
+        location: '/puppet-ca/'
+        proxy: "https://%{lookup('boltello::katello_server')}:8140"
+        server: puppetserver-reverse-proxy
+        proxy_set_header:
+          - 'Host            $host'
+          - 'X-Client-Verify $ssl_client_verify'
+          - 'X-SSL-Subject   $ssl_client_s_dn_legacy'
+          - 'X-SSL-Issuer    $ssl_client_i_dn_legacy'
+          - 'X-Client-DN     $ssl_client_s_dn_legacy'
+      'reverse-proxy':
+        ensure: present
+        location: '/'
+        proxy: 'http://%{facts.networking.fqdn}:8139'
+        proxy_redirect: 'off'
+        server: puppetserver-reverse-proxy
+        proxy_set_header:
+          - 'Host            $host'
+          - 'X-Client-Verify $ssl_client_verify'
+          - 'X-SSL-Subject   $ssl_client_s_dn_legacy'
+          - 'X-SSL-Issuer    $ssl_client_i_dn_legacy'
+          - 'X-Client-DN     $ssl_client_s_dn_legacy'
+      'install-agent':
+        ensure: present
+        location: '/install'
+        www_root: '/usr/share/nginx'
+        server : puppetserver-reverse-proxy
+        proxy_set_header: []

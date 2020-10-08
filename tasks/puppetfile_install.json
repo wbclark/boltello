@@ -1,0 +1,9 @@
+{
+  "description": "Install modules from the Puppetfile",
+  "parameters": {
+    "boltdir": {
+      "description": "The bolt project directory",
+      "type": "String[1]"
+    }
+  }  
+}

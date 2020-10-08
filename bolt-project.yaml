@@ -1,0 +1,47 @@
+## Docs Reference: https://puppet.com/docs/bolt/latest/bolt_configuration_options.html
+# bolt-project.yaml
+apply_settings:
+  show_diff: true
+modulepath: "~/boltello/modules"
+hiera-config: "~/boltello/hiera.yaml"
+inventoryfile: "~/boltello/inventory.yaml"
+format: human
+save-rerun: false
+color: true
+compile-concurrency: 2
+concurrency: 2
+log:
+  console:
+    level: notice
+  "~/boltello/debug.log":
+    append: false
+    level: debug
+name: boltello
+plans:
+- boltello::add_nodes
+- boltello::build_katello
+- boltello::build_proxies
+- boltello::check_version
+- boltello::configure_directories
+- boltello::generate_certs
+- boltello::install_puppet
+- boltello::katello_prep
+- boltello::katello_upgrade
+- boltello::run_puppet
+- boltello::update_metadata
+- boltello::versionlock
+plugin_hooks:
+  puppet_library:
+    plugin: puppet_agent
+    version: 6.18.0
+    _run_as: root
+plugins:
+  pkcs7:
+    keysize: 1024
+save-rerun: false
+tasks:
+- boltello::boltello_role
+- boltello::configure_directories
+- boltello::generate_certs
+- boltello::generate_puppetfile
+- boltello::puppetfile_install

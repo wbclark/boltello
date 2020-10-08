@@ -1,0 +1,13 @@
+{
+  "description": "Recursively copy the project directory",
+  "parameters": {
+    "boltdir": {
+      "description": "The bolt project directory",
+      "type": "String[1]"
+    },
+    "platform": {
+      "description": "The puppet agent platform version",
+      "type": "String[1]"
+    }
+  }
+}
